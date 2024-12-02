@@ -1,0 +1,17 @@
+{
+    "name": "herya/secure-auth",
+    "autoload": {
+        "psr-4": {
+            "Herya\\SecureAuth\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Heryandi Pradana",
+            "email": "heryandi2806@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
