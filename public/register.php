@@ -3,7 +3,6 @@ require_once __DIR__ . '/../src/Controller/AuthController.php';
 
 use Herya\SecureAuth\Controller\AuthController;
 
-// Create an instance of the AuthController
 $authController = new AuthController();
 $errorMessage = $authController->register();
 ?>
@@ -20,7 +19,6 @@ $errorMessage = $authController->register();
     <div class="container" id="register">
         <h2 class="tittle-reg">Register</h2>
 
-        <!-- Display error message from PHP (e.g., username already exists) -->
         <?php if ($errorMessage): ?>
             <div class="error-message">
                 <p id="error-m"><?php echo htmlspecialchars($errorMessage); ?></p>

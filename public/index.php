@@ -1,11 +1,10 @@
 <?php
-// Include the AuthController to handle login
 require_once __DIR__ . '/../src/Controller/AuthController.php';
 
 use Herya\SecureAuth\Controller\AuthController;
 
 $authController = new AuthController();
-$errorMessage = $authController->login(); // Get the error message if any
+$errorMessage = $authController->login();
 ?>
 
 <!DOCTYPE html>

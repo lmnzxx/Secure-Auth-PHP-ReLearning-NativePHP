@@ -9,37 +9,38 @@ class AuthController {
 
     public function __construct()
     {
-        require_once __DIR__ . '/../../config/db.php'; // Ensure the path is correct
+        require_once __DIR__ . '/../../config/db.php'; 
         
-        global $pdo;  // Access the global $pdo variable set in db.php
-        $this->pdo = $pdo;  // Set the $pdo for the controller
+        global $pdo;  
+        $this->pdo = $pdo;  
     }
 
     public function login() {
-        $errorMessage = ''; // Default error message is empty
-        
+        $errorMessage = ''; 
+    
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'];
             $password = $_POST['password'];
             
-            $userModel = new UserModel($this->pdo); // Pass PDO object to UserModel
-            if ($userModel->checkCredentials($username, $password)) {
-                header("Location: dashboard.php");
-                exit;
-            } else {
-                $errorMessage = "Invalid credentials. Please try again!";
+            $userModel = new UserModel($this->pdo); 
+            try {
+                if ($userModel->checkCredentials($username, $password)) {
+                    header("Location: dashboard.php");
+                    exit;
+                }
+            } catch (\Exception $e) {
+                $errorMessage = $e->getMessage();
             }
         }
-
+    
         return $errorMessage;
-    }
-
+    }    
     public function register() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'];
             $email = $_POST['email'];
             $password = $_POST['password'];
-            $role = 'user'; // Default role
+            $role = 'user';
             
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
             
