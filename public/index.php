@@ -4,7 +4,6 @@ require_once __DIR__ . '/../src/Controller/AuthController.php';
 
 use Herya\SecureAuth\Controller\AuthController;
 
-// Create an instance of the AuthController
 $authController = new AuthController();
 $errorMessage = $authController->login(); // Get the error message if any
 ?>
@@ -44,7 +43,7 @@ $errorMessage = $authController->login(); // Get the error message if any
 
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
-
+        <script src="assets/js/main.js"></script>
         <p>Don't have an account? <a href="register.php">Register here</a></p>
     </div>
 </body>

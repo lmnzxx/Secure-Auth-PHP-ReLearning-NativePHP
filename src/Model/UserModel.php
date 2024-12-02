@@ -3,6 +3,7 @@
 namespace Herya\SecureAuth\Model;
 
 use PDO;
+use PDOException;
 
 class UserModel {
     private $pdo;
@@ -22,25 +23,32 @@ class UserModel {
     }
 
     public function createUser($username, $email, $password, $role) {
-        // Periksa apakah username sudah ada
-        $checkStmt = $this->pdo->prepare('SELECT COUNT(*) FROM users WHERE username = :username');
-        $checkStmt->execute([':username' => $username]);
-        $exists = $checkStmt->fetchColumn();
-    
-        if ($exists > 0) {
-            // Jika username sudah ada, lempar exception atau kembalikan pesan error
-            throw new \Exception("Username sudah terdaftar.");
+        try {
+            // Insert data pengguna ke database
+            $sql = 'INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                ':username' => $username,
+                ':email' => $email,
+                ':password' => $password,
+                ':role' => $role,
+            ]);
+
+            return true; // Berhasil
+        } catch (PDOException $e) {
+            // Tangani error duplicate entry berdasarkan constraint UNIQUE
+            if ($e->getCode() == '23000') { // Kode error SQL untuk pelanggaran constraint
+                if (strpos($e->getMessage(), 'username') !== false) {
+                    throw new \Exception("Username tersebut sudah digunakan. Silakan pilih username lain.");
+                }
+                if (strpos($e->getMessage(), 'email') !== false) {
+                    throw new \Exception("Email tersebut sudah terdaftar. Silakan gunakan email lain.");
+                }
+            }
+
+            // Lempar error generik jika penyebabnya bukan duplicate entry
+            throw new \Exception("Terjadi kesalahan saat mendaftarkan pengguna. Silakan coba lagi.");
         }
-    
-        // Lanjutkan dengan proses insert jika username belum ada
-        $sql = 'INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)';
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':username' => $username,
-            ':email' => $email,
-            ':password' => $password,
-            ':role' => $role,
-        ]);
-    }    
+    }
 }
 ?>

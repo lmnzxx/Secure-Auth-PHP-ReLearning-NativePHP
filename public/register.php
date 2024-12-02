@@ -20,6 +20,7 @@ $errorMessage = $authController->register();
     <div class="container" id="register">
         <h2 class="tittle-reg">Register</h2>
 
+        <!-- Display error message from PHP (e.g., username already exists) -->
         <?php if ($errorMessage): ?>
             <div class="error-message">
                 <p id="error-m"><?php echo htmlspecialchars($errorMessage); ?></p>
@@ -40,11 +41,20 @@ $errorMessage = $authController->register();
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" name="password" id="password" class="form-control" required>
+                <div id="password-requirements">
+                    <ul>
+                        <li id="length" class="invalid">At least 8 characters</li>
+                        <li id="uppercase" class="invalid">At least 1 uppercase letter</li>
+                        <li id="lowercase" class="invalid">At least 1 lowercase letter</li>
+                        <li id="number" class="invalid">At least 1 number</li>
+                        <li id="special" class="invalid">At least 1 special character</li>
+                    </ul>
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary" disabled>Register</button>
         </form>
-
+        <script src="assets/js/main.js"></script>
         <p>Already have an account? <a href="index.php">Login here</a></p>
     </div>
 </body>
