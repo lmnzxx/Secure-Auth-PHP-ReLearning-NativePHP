@@ -55,7 +55,7 @@ Repository ini berisi proyek pengembangan sistem autentikasi berbasis PHP native
    ```bash
    php -S localhost:8000 -t public
    ```
-4. Kemudian akses aplikasi melalui http://localhost:8000.
+4. Kemudian akses aplikasi melalui http://localhost:8000 atau sesuaikan dengan konfigurasi yang dilakukan.
 
 ---
 
