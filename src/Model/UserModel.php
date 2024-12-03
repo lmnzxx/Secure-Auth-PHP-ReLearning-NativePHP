@@ -90,7 +90,7 @@ class UserModel {
             $stmt->execute([
                 ':username' => $username,
                 ':email' => $email,
-                ':password' => password_hash($password, PASSWORD_DEFAULT), // Hash password sebelum disimpan
+                ':password' => $password,
                 ':role' => $role,
             ]);
 
