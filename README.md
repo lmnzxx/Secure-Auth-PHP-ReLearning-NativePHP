@@ -14,23 +14,32 @@ Repository ini berisi proyek pengembangan sistem autentikasi berbasis PHP native
 - **Struktur Direktori Terorganisir**
 ```teks
 /secure-auth
-│ ├── /public                # File yang dapat diakses oleh web server
-│ ├── /assets                # File CSS, JS, dan gambar
-│ │ ├── /css                 # CSS file
-│ │ ├── /js                  # JavaScript file
-│ │ └── /img                 # Gambar dan media
-│ ├── index.php              # Entry point, file utama yang menangani login
-│ └── login.php              # Halaman login
-│ ├── /src                   # Folder untuk logika aplikasi
-│ ├── /Controller            # Logika aplikasi
-│ │ └── AuthController.php   # Menangani login dan pendaftaran
-│ ├── /Model                 # Interaksi dengan database
-│ │ └── UserModel.php        # Query database (misal login)
-│ └── /Service               # Proses tambahan seperti MFA dan throttling
-│ └── AuthService.php
-│ ├── /config                # File konfigurasi
-│ └── database.php           # Pengaturan koneksi database
-│ └── /vendor                # Dependensi (Composer)
+├── /config                      # File konfigurasi
+│ └── db.php                     # Pengaturan koneksi database
+├── /public                      # File yang dapat diakses oleh web server
+│ ├── index.php                  # Entry point, file utama yang memberi tampilan login dan menangani login
+│ ├── register.php               # File yang akan menangani dan menampilkan proses registrasi user
+│ ├── logout.php                 # File yang menangani proses logout user
+│ ├── dashboard.php              # File yang akan menampilkan halaman utama yang akan dilihat user setelah login
+│ ├── forgot-password.php        # File yang menangani dan menampilkan proses forgot password
+│ ├── reset-password.php         # File yang menangani login
+│ └── /assets                    # File CSS, JS, dan gambar
+│ │ ├── /css                     # CSS file
+│ │ ├── /js                      # JavaScript file
+│ │ └── /img                     # Gambar dan media
+├── /src                         # Folder untuk logika aplikasi
+│ ├── /Controller                # Logika aplikasi
+│ │ └── AuthController.php       # Menangani login dan pendaftaran
+│ ├── /Model                     # Interaksi dengan database
+│ │ └── UserModel.php            # Query database 
+│ └── /Service                   # Proses tambahan seperti MFA dan throttling
+│ │ ├── AuthService.php
+│ │ ├── LoginAttemptService.php
+│ │ └── LogService.php
+├── /vendor                      
+├── .env                    
+├── composer.json     
+└── composer.lock      
 ```
 
 ---
