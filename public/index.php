@@ -3,9 +3,10 @@ require_once __DIR__ . '/../src/Controller/AuthController.php';
 
 use Herya\SecureAuth\Controller\AuthController;
 
+$pdo = require __DIR__ . '/../config/db.php'; 
 $authController = new AuthController();
 $errorMessage = $authController->login();
-?>
+?> 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -42,8 +43,9 @@ $errorMessage = $authController->login();
 
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
-        <script src="assets/js/main.js"></script>
+        <p><a href="forgot-password.php">Forgot your password?</a></p>
         <p>Don't have an account? <a href="register.php">Register here</a></p>
+        <script src="assets/js/main.js"></script>
     </div>
 </body>
 </html>

@@ -23,9 +23,16 @@ CREATE TABLE IF NOT EXISTS `audit_logs` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `audit_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 
--- Data exporting was unselected.
+-- Dumping data for table secure-auth.audit_logs: ~6 rows (approximately)
+INSERT INTO `audit_logs` (`id`, `user_id`, `action`, `timestamp`) VALUES
+	(27, 23, 'Login sukses', '2024-12-03 13:47:39'),
+	(28, 23, 'Login sukses', '2024-12-03 14:30:12'),
+	(29, 22, 'Login sukses', '2024-12-03 18:04:34'),
+	(30, 23, 'Login sukses', '2024-12-03 18:04:48'),
+	(31, 23, 'Login sukses', '2024-12-03 18:04:57'),
+	(32, 24, 'Login sukses', '2024-12-03 18:05:21');
 
 -- Dumping structure for table secure-auth.login_attempts
 CREATE TABLE IF NOT EXISTS `login_attempts` (
@@ -36,9 +43,28 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
   `locked_until` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 
--- Data exporting was unselected.
+-- Dumping data for table secure-auth.login_attempts: ~0 rows (approximately)
+
+-- Dumping structure for table secure-auth.password_resets
+CREATE TABLE IF NOT EXISTS `password_resets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `token` varchar(6) NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+
+-- Dumping data for table secure-auth.password_resets: ~4 rows (approximately)
+INSERT INTO `password_resets` (`id`, `email`, `token`, `created_at`) VALUES
+	(1, 'heryandi2806@gmail.com', '473225', '2024-12-03 18:19:39'),
+	(2, 'heryandi2880@gmail.com', '456797', '2024-12-03 18:19:45'),
+	(3, 'heryandi2806@gmail.com', '888519', '2024-12-03 18:21:25'),
+	(4, 'heryandi2806@gmail.com', '807958', '2024-12-03 18:31:10'),
+	(5, 'heryandi2806@gmail.com', '198393', '2024-12-03 18:34:11'),
+	(6, 'heryandi2806@gmail.com', '414369', '2024-12-03 18:34:20'),
+	(7, 'heryandi2806@gmail.com', '770501', '2024-12-03 18:35:46');
 
 -- Dumping structure for table secure-auth.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -52,9 +78,13 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 
--- Data exporting was unselected.
+-- Dumping data for table secure-auth.users: ~3 rows (approximately)
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`, `mfa_secret`, `created_at`) VALUES
+	(22, 'heryandi', 'heryandi2806@gmail.com', '$2y$10$hMVHgUSOxYtINYpmD3ssGegcb3MxF9ka.np8QeHPWv9TgPKVu3WVG', 'user', NULL, '2024-12-03 13:47:19'),
+	(23, 'hery', 'heryandi2880@gmail.com', '$2y$10$bNZk13g0tnhQiHDeuHYau.gHTPyuJpEhM0XMnYLqOL8w3p7OJu3mS', 'user', NULL, '2024-12-03 13:47:33'),
+	(24, 'manik', 'manik@s.id', '$2y$10$llUKQoHH68RvW8ojw38wm.o69EHgCFj7MfS3TUq/YrhAT9tiG7SIa', 'user', NULL, '2024-12-03 18:05:14');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

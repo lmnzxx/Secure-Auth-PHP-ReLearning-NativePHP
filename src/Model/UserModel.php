@@ -4,79 +4,42 @@ namespace Herya\SecureAuth\Model;
 
 use PDO;
 use PDOException;
+use Herya\SecureAuth\Service\LoginAttemptService;
+use Herya\SecureAuth\Service\LogService;
 
 date_default_timezone_set('Asia/Singapore');
 
 class UserModel {
     private $pdo;
 
-    public function __construct(PDO $pdo)
-    {
+    public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
     }
 
-    // Fungsi untuk mencatat log tindakan
-    public function logAction($userId, $action) {
-        $stmt = $this->pdo->prepare('INSERT INTO audit_logs (user_id, action) VALUES (:user_id, :action)');
-        $stmt->execute([
-            ':user_id' => $userId,
-            ':action' => $action,
-        ]);
-    }
-
-    // Fungsi untuk memeriksa percobaan login
-    public function checkLoginAttempt($username) {
-        $stmt = $this->pdo->prepare('SELECT * FROM login_attempts WHERE username = :username');
-        $stmt->execute( [':username' => $username]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    // Fungsi untuk meningkatkan jumlah percobaan login
-    public function incrementLoginAttempt($username, $lockDuration) {
-        $stmt = $this->pdo->prepare(
-            'INSERT INTO login_attempts (username, attempts, locked_until) 
-             VALUES (:username, 1, NULL)
-             ON DUPLICATE KEY UPDATE 
-                attempts = attempts + 1,
-                last_attempt = NOW(),
-                locked_until = CASE 
-                    WHEN attempts >= 4 THEN DATE_ADD(NOW(), INTERVAL :lock_duration SECOND)
-                    ELSE locked_until END'
-        );
-        $stmt->execute([':username' => $username, ':lock_duration' => $lockDuration]);
-    }
-
-    // Fungsi untuk mereset percobaan login
-    public function resetLoginAttempt($username) {
-        $stmt = $this->pdo->prepare('DELETE FROM login_attempts WHERE username = :username');
-        $stmt->execute([':username' => $username]);
-    }
-
-    public function checkCredentials($username, $password) {
-        $loginAttempt = $this->checkLoginAttempt($username);
+    public function checkCredentials($username, $password, LoginAttemptService $loginAttemptService, LogService $logService) {
+        // Memeriksa percobaan login
+        $loginAttempt = $loginAttemptService->checkLoginAttempt($username);
 
         if ($loginAttempt && !empty($loginAttempt['locked_until']) && strtotime($loginAttempt['locked_until']) > time()) {
-            $remaining = strtotime( $loginAttempt['locked_until']) - time();
+            $remaining = strtotime($loginAttempt['locked_until']) - time();
             throw new \Exception("Akun terkunci. Silakan coba lagi dalam {$remaining} detik.");
         }
 
+        // Memeriksa kredensial
         $stmt = $this->pdo->prepare('SELECT * FROM users WHERE username = :username');
         $stmt->bindParam(':username', $username);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
-            $this->resetLoginAttempt($username);
-
-            $this->logAction($user['id'], 'Login sukses');
-
+            $loginAttemptService->resetLoginAttempt($username);  // Reset percobaan login
+            $logService->logAction($user['id'], 'Login sukses');  // Log login sukses
             return true;
         } else {
-            $lockDuration = $loginAttempt ? (pow(3, $loginAttempt['attempts'])) * 60 : 300; 
-            $this->incrementLoginAttempt($username, $lockDuration);
-
+            $lockDuration = $loginAttempt ? (pow(3, $loginAttempt['attempts'])) * 60 : 300;
+            $loginAttemptService->incrementLoginAttempt($username, $lockDuration); // Increment percobaan login
             if ($user) {
-                $this->logAction($user['id'], 'Percobaan login gagal');
+                $logService->logAction($user['id'], 'Percobaan login gagal');  // Log login gagal
             }
 
             throw new \Exception('Username atau password salah.');
@@ -107,5 +70,43 @@ class UserModel {
             throw new \Exception("Terjadi kesalahan saat mendaftarkan pengguna. Silakan coba lagi.");
         }
     }
+
+    public function userExists($email){
+        $email = trim(strtolower($email));
+        $stmt = $this->pdo->prepare("SELECT id FROM users WHERE email = :email");
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Menyimpan token reset password ke database
+    public function savePasswordResetToken($email, $token){
+        $stmt = $this->pdo->prepare("INSERT INTO password_resets (email, token) VALUES (:email, :token)");
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':token', $token);
+        return $stmt->execute();
+    }
+
+    // Validasi token
+    public function validateToken($email, $token){
+        $stmt = $this->pdo->prepare("SELECT * FROM password_resets WHERE email = :email AND token = :token AND created_at > NOW() - INTERVAL 1 HOUR");
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Update password user
+    public function updatePassword($email, $newPassword){
+        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+        $stmt = $this->pdo->prepare("UPDATE users SET password = :password WHERE email = :email");
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password', $hashedPassword);
+        return $stmt->execute();
+    }
+
+    // Generate token reset password 6 digit
+    public function generateToken(){
+        return str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+    }
 }
-?>

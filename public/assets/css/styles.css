@@ -50,7 +50,7 @@ body {
 }
 
 .form-group label {
-    font-weight: bold;
+    font-weight: 600;
     color: #333;
 }
 
@@ -164,6 +164,63 @@ body {
 button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+/* forgot password and reset password */
+#resetPass {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#forgotPass {
+    background-color: #fafafa;
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.tittleForgot {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.tittleReset {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.formForgot input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.formForgot label {
+    font-weight: 600;
+}
+
+.formForgot button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #036ad7;
 }
 
 

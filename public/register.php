@@ -3,9 +3,10 @@ require_once __DIR__ . '/../src/Controller/AuthController.php';
 
 use Herya\SecureAuth\Controller\AuthController;
 
+$pdo = require __DIR__ . '/../config/db.php'; 
 $authController = new AuthController();
 $errorMessage = $authController->register();
-?>
+?> 
 
 <!DOCTYPE html>
 <html lang="en">

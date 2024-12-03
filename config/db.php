@@ -8,6 +8,7 @@ try {
     global $pdo;  
     $pdo = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    return $pdo; 
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
 }
