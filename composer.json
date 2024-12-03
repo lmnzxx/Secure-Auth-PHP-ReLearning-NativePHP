@@ -1,14 +1,14 @@
 {
-    "name": "herya/secure-auth",
+    "name": "/secure-auth",
     "autoload": {
         "psr-4": {
-            "Herya\\SecureAuth\\": "src/"
+            "\\SecureAuth\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "Heryandi Pradana",
-            "email": "heryandi2806@gmail.com"
+            "name": "",
+            "email": ""
         }
     ],
     "require": {
